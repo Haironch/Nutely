@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type KeyboardEvent } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -9,6 +9,16 @@ import { calculate } from '@/utils/calculations'
 import type { UserData } from '@/types'
 import { ACTIVITY_LABELS, GOAL_LABELS } from '@/constants/labels'
 import { cn } from '@/lib/utils'
+
+const blockNonNumeric = (e: KeyboardEvent<HTMLInputElement>) => {
+  if (
+    e.key.length === 1 &&
+    !/[\d.]/.test(e.key) &&
+    !e.ctrlKey && !e.metaKey
+  ) {
+    e.preventDefault()
+  }
+}
 
 const schema = z.object({
   age: z.number({ message: 'Requerido' }).min(13).max(100),
@@ -175,6 +185,8 @@ export function NutelyForm() {
                       <input
                         {...register('age', { valueAsNumber: true })}
                         type="number"
+                        inputMode="numeric"
+                        onKeyDown={blockNonNumeric}
                         placeholder="25"
                         className="w-full px-4 py-3 rounded-xl border border-white/10 bg-white/3 text-white placeholder-gray-600 focus:outline-none focus:border-emerald-500/50 transition-colors"
                       />
@@ -188,6 +200,8 @@ export function NutelyForm() {
                         <input
                           {...register('heightCm', { valueAsNumber: true })}
                           type="number"
+                          inputMode="numeric"
+                          onKeyDown={blockNonNumeric}
                           placeholder="175"
                           className="w-full px-4 py-3 rounded-xl border border-white/10 bg-white/3 text-white placeholder-gray-600 focus:outline-none focus:border-emerald-500/50 transition-colors"
                         />
@@ -200,6 +214,8 @@ export function NutelyForm() {
                         <input
                           {...register('weightKg', { valueAsNumber: true })}
                           type="number"
+                          inputMode="numeric"
+                          onKeyDown={blockNonNumeric}
                           placeholder="80"
                           className="w-full px-4 py-3 rounded-xl border border-white/10 bg-white/3 text-white placeholder-gray-600 focus:outline-none focus:border-emerald-500/50 transition-colors"
                         />
@@ -258,6 +274,8 @@ export function NutelyForm() {
                       <input
                         {...register('goalWeightKg', { valueAsNumber: true })}
                         type="number"
+                        inputMode="numeric"
+                        onKeyDown={blockNonNumeric}
                         placeholder="72"
                         className="w-full px-4 py-3 rounded-xl border border-white/10 bg-white/3 text-white placeholder-gray-600 focus:outline-none focus:border-emerald-500/50 transition-colors"
                       />
@@ -285,8 +303,15 @@ export function NutelyForm() {
                           <div key={key}>
                             <label className="block text-xs text-gray-400 mb-2">{label}</label>
                             <input
-                              {...register(key as keyof FormData, { valueAsNumber: true })}
+                              {...register(key as keyof FormData, {
+                                setValueAs: (v) => {
+                                  const n = parseFloat(v)
+                                  return isNaN(n) ? undefined : n
+                                },
+                              })}
                               type="number"
+                              inputMode="numeric"
+                              onKeyDown={blockNonNumeric}
                               placeholder={placeholder}
                               className="w-full px-3 py-3 rounded-xl border border-white/10 bg-white/3 text-white placeholder-gray-600 focus:outline-none focus:border-emerald-500/50 transition-colors text-sm"
                             />
