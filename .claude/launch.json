@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "nutely",
+      "runtimeExecutable": "/Users/haironchavez/Desktop/Proyectos 2026/Nutely/node_modules/.bin/vite",
+      "runtimeArgs": [],
+      "cwd": "/Users/haironchavez/Desktop/Proyectos 2026/Nutely",
+      "port": 5173
+    }
+  ]
+}
